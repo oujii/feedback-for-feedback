@@ -1,0 +1,26 @@
+{
+  "version": 3,
+  "file": "bundle.css",
+  "sources": [
+    "../App.svelte",
+    "../Auth.svelte",
+    "../Button.svelte",
+    "../Button1.svelte",
+    "../DisplayFeedback.svelte",
+    "../FeedbackItem.svelte",
+    "../TodoItem.svelte",
+    "../Todos.svelte"
+  ],
+  "sourcesContent": [
+    "<script>\n  import Auth from './components/Auth.svelte';\n  import Login from './components/Login.svelte';\n  import Button from './components/Button.svelte';\n  import DisplayFeedback from './components/DisplayFeedback.svelte';\n  import AddFeedback from './components/AddFeedback.svelte';\n\n  let isLoadingAuth = true;\n  let isLoggedIn = false;\n\n  userbase\n    .init({ appId: '5603514f-012b-4412-9956-cb04483a6ca7' })\n    .then((session) => {\n      if (session.user) isLoggedIn = true;\n    })\n    .catch((error) => console.log(error))\n    .finally(() => (isLoadingAuth = false));\n\n  const userbaseSession = localStorage.getItem('userbaseCurrentSession');\n\n  if (userbaseSession) {\n    isLoggedIn = JSON.parse(userbaseSession).signedIn;\n  }\n\n  function handleSignout() {\n    userbase.signOut().then(() => (isLoggedIn = false));\n  }\n</script>\n\n<main>\n  {#if !isLoadingAuth && isLoggedIn}\n    <Button\n      on:click={handleSignout}\n      style=\"position: fixed; top: 10px; left: 10px;\">Sign out</Button\n    >\n  {/if}\n  {#if isLoadingAuth}\n    Loading ...\n  {:else}\n    {#if isLoggedIn === false}\n      <Auth bind:isLoggedIn />\n      <Login bind:isLoggedIn />\n    {/if}\n    {#if isLoggedIn}\n      <AddFeedback />\n      <DisplayFeedback />\n    {/if}\n  {/if}\n</main>\n\n<style>\n  main {\n    font-family: comic-sans;\n    text-align: center;\n  }\n</style>\n",
+    "<script>\n  let username = '';\n  let password = '';\n  let error = '';\n  export let isLoggedIn;\n\n  function handleSignUp(e) {\n    e.preventDefault();\n\n    userbase\n      .signUp({ username, password, rememberMe: 'local' })\n      .then((user) => {\n        console.log('Logged in!');\n        isLoggedIn = true;\n      })\n      .catch((errorFromApi) => (error = errorFromApi));\n  }\n</script>\n\n<div id=\"auth-view\">\n  <h1>Create an account</h1>\n  <form id=\"signup-form\" on:submit={handleSignUp}>\n    <input type=\"text\" required placeholder=\"Username\" bind:value={username} />\n    <input\n      type=\"password\"\n      required\n      placeholder=\"Password\"\n      bind:value={password}\n    />\n    <input type=\"submit\" value=\"Create an account\" />\n  </form>\n  <div id=\"signup-error\">{error}</div>\n</div>\n\n<style>\n  div {\n    background-color: blue;\n  }\n</style>\n",
+    "<button>\n  <slot />\n</button>\n\n<style>\n  button {\n    background: #ff3e00;\n    color: white;\n    border: none;\n    padding: 8px 12px;\n    border-radius: 2px;\n  }\n</style>\n",
+    "<button>\n  <slot />\n</button>\n\n<style>\n  button {\n    background: #ff3e00;\n    color: white;\n    border: none;\n    padding: 8px 12px;\n    border-radius: 2px;\n  }\n</style>\n",
+    "<script>\n  import FeedbackItem from './FeedbackItem.svelte';\n\n  let items;\n\n  userbase.openDatabase({\n    databaseName: 'public-feedback',\n    changeHandler: (itemsFromApi) => (items = itemsFromApi),\n  });\n\n  $: {\n    console.log(items);\n  }\n</script>\n\n<h1>To-Do List</h1>\n{#if items}\n  {#each items as item}\n    <ul>\n      <FeedbackItem {item} />\n    </ul>\n  {/each}\n{/if}\n\n<style>\n  ul {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n  }\n</style>\n",
+    "<script>\n  export let item;\n</script>\n\n<li>\n  {item.item.feedback}\n</li>\n\n<style>\n  li {\n    list-style-type: '\\1F44D';\n  }\n</style>\n",
+    "<script>\n  export let item;\n</script>\n\n<li>\n  {item.item.todo}\n</li>\n\n<style>\n  li {\n    list-style-type: '\\1F44D';\n  }\n</style>\n",
+    "<script>\n  import TodoItem from './TodoItem.svelte';\n\n  let items;\n\n  userbase.openDatabase({\n    databaseName: 'todos',\n    changeHandler: (itemsFromApi) => (items = itemsFromApi),\n  });\n\n  $: {\n    console.log(items);\n  }\n</script>\n\n<h1>To-Do List</h1>\n{#if items}\n  {#each items as item}\n    <ul>\n      <TodoItem {item} />\n    </ul>\n  {/each}\n{/if}\n\n<style>\n  ul {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n  }\n</style>\n"
+  ],
+  "names": [],
+  "mappings": "AAmDE,IAAI,eAAC,CAAC,AACJ,WAAW,CAAE,UAAU,CACvB,UAAU,CAAE,MAAM,AACpB,CAAC;ACnBD,GAAG,cAAC,CAAC,AACH,gBAAgB,CAAE,IAAI,AACxB,CAAC;AChCD,MAAM,eAAC,CAAC,AACN,UAAU,CAAE,OAAO,CACnB,KAAK,CAAE,KAAK,CACZ,MAAM,CAAE,IAAI,CACZ,OAAO,CAAE,GAAG,CAAC,IAAI,CACjB,aAAa,CAAE,GAAG,AACpB,CAAC;ACND,MAAM,eAAC,CAAC,AACN,UAAU,CAAE,OAAO,CACnB,KAAK,CAAE,KAAK,CACZ,MAAM,CAAE,IAAI,CACZ,OAAO,CAAE,GAAG,CAAC,IAAI,CACjB,aAAa,CAAE,GAAG,AACpB,CAAC;ACcD,EAAE,eAAC,CAAC,AACF,OAAO,CAAE,IAAI,CACb,cAAc,CAAE,MAAM,CACtB,WAAW,CAAE,MAAM,AACrB,CAAC;ACpBD,EAAE,cAAC,CAAC,AACF,eAAe,CAAE,QAAQ,AAC3B,CAAC;ACFD,EAAE,cAAC,CAAC,AACF,eAAe,CAAE,QAAQ,AAC3B,CAAC;ACcD,EAAE,eAAC,CAAC,AACF,OAAO,CAAE,IAAI,CACb,cAAc,CAAE,MAAM,CACtB,WAAW,CAAE,MAAM,AACrB,CAAC"
+}
