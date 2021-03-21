@@ -1,14 +1,14 @@
 <script>
   import Feed from './components/Feed.svelte';
-  import AddFeedback from './components/AddFeedback.svelte';
+  import AddFeedItem from './components/AddFeedItem.svelte';
 
   let db = firebase.firestore();
 </script>
 
 <main class="flex flex-col h-full overflow-hidden">
   <section class="h-32 p-10">
-    <h1 class="text-green-500">feedback for feedback</h1>
-    <AddFeedback {db} />
+    <h1>feedback for feedback</h1>
+    <AddFeedItem {db} />
   </section>
   <Feed {db} />
 </main>
@@ -45,6 +45,10 @@
 
     h3 {
       @apply text-xl;
+    }
+
+    input:first-child {
+      margin-top: 0.5rem;
     }
   }
 </style>

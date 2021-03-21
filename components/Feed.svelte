@@ -19,10 +19,10 @@
 
 {#if items}
   <ul
-    class="w-full flex-1 flex flex-col items-center list-none gap-2 p-10 bg-gray-100 overflow-auto"
+    class="w-full flex-1 flex flex-col items-center list-none gap-4 p-10 bg-gray-100 overflow-auto"
   >
     {#each items as item}
-      <FeedItem {item} />
+      <FeedItem {item} {db} />
     {/each}
   </ul>
 {/if}

@@ -1,22 +1,20 @@
 <script>
+  import AddFeedback from './AddFeedback.svelte';
+  import Feedback from './Feedback.svelte';
+
+  export let db;
   export let item;
+  let feedback;
+
   let isExpanded = false;
-  let feedbackText = '';
 
-  function addFeedbackHandler(e) {
-    e.preventDefault();
-    if (!db) return;
-
-    db.collection('feedback')
-      .add({
-        text: feedbackText,
-      })
-      .then((docRef) => {
-        console.log('Document written with ID: ', docRef.id);
-      })
-      .catch((error) => {
-        console.error('Error adding document: ', error);
+  $: {
+    if (db && (item && item.id)) {
+      db.collection('feedback').doc(item.id).onSnapshot((doc) => {
+        const feedbackItem = doc.data();
+        feedback = feedbackItem && feedbackItem.feedback || null;
       });
+    }
   }
 </script>
 
@@ -32,7 +30,7 @@
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 -256 1792 1792"
       width="20px"
-      class="transform ease-out duration-200"
+      class="transform ease-out duration-200 text-green-500"
       class:rotate-180={isExpanded}
       ><path
         fill="currentColor"
@@ -41,27 +39,10 @@
     >
   </div>
   {#if isExpanded}
-    <p>{item.description}</p>
-    <form
-      on:submit={addFeedbackHandler}
-      class="flex pt-2 mt-2 border-t border-black"
-    >
-      <label class="flex-1">
-        Headline
-        <input
-          type="text"
-          required
-          placeholder="Add feedback"
-          bind:value={feedbackText}
-          class="block w-full p-2 border border-gray rounded-md"
-        />
-      </label>
-      <button
-        type="submit"
-        class="flex-initial bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 border border-blue-700 rounded"
-      >
-        Add
-      </button>
-    </form>
+    <p class="mb-8">{item.description}</p>
+    <div class="grid grid-cols-3 gap-4">
+      <Feedback {feedback} />
+      <AddFeedback id={item.id} {db} />
+    </div>
   {/if}
 </li>
