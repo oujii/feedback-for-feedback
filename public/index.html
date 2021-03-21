@@ -5,14 +5,30 @@
     <meta name="viewport" content="width=device-width" />
 
     <title>Svelte app</title>
-    <script
-      type="text/javascript"
-      src="https://sdk.userbase.com/2/userbase.js"
-    ></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Inter:wght@400;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="public/bundle.css" />
   </head>
 
   <body>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
+
+    <script>
+      var firebaseConfig = {
+        apiKey: 'AIzaSyBd4UnQr9_y8ZetMigrZVxuJdmBElSexPY',
+        authDomain: 'feedback-for-feedback.firebaseapp.com',
+        projectId: 'feedback-for-feedback',
+        storageBucket: 'feedback-for-feedback.appspot.com',
+        messagingSenderId: '329108343452',
+        appId: '1:329108343452:web:7360a3c83bc3d47e4a7b59',
+      };
+
+      firebase.initializeApp(firebaseConfig);
+    </script>
     <script src="bundle.js"></script>
   </body>
 </html>
